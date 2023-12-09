@@ -1,10 +1,9 @@
 #include <iostream>
 
 #include "graph.hpp"
+#include "algorithm.hpp"
 
 int main() {
-	int num_vertices = 7;
-	
 	std::vector<std::pair<int, int>> edges = {
 		{0, 1},
 		{0, 2},
@@ -15,9 +14,13 @@ int main() {
 		{4, 3}
 	};
 
-	Graph g(num_vertices, edges);
+	Graph g(edges);
 	
 	std::cout << g;
 	
+	std::cout << "\nPerforming algorithm...\n\n";
+	
+	g.perform_algorithm();
+		
 	return 0;
 }
