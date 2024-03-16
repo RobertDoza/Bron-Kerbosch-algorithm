@@ -1,20 +1,33 @@
 EXECUTABLE = test
-MAIN = main
-GRAPH = graph
-ALGORITHM = algorithm
+MAIN       = main
+GRAPH      = graph
+ALGORITHM  = algorithm
+
 CPPFLAGS = -Wall -Wextra -Werror -pedantic
 
-$(EXECUTABLE): $(MAIN).o $(GRAPH).o $(ALGORITHM).o
+MODULES = \
+	 $(MAIN) \
+	 $(GRAPH) \
+	 $(ALGORITHM)
+
+OBJECTS := $(addsuffix .o, $(MODULES))
+OBJECTS := $(addprefix bin/, $(OBJECTS))
+SOURCES := $(addsuffix .cpp, $(MODULES))
+SOURCES := $(addprefix src/, $(SOURCES))
+HEADERS := $(addsuffix .hpp, $(MODULES))
+HEADERS := $(addprefix include/, $(HEADERS))
+
+$(EXECUTABLE): $(OBJECTS)
 	g++ $^ -o $@ $(CPPFLAGS)
 
-$(MAIN).o: $(MAIN).cpp $(GRAPH).hpp $(ALGORITHM).hpp
-	g++ $< -c -o $@ $(CPPFLAGS)
+bin/$(MAIN).o: src/$(MAIN).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp
+	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
-$(GRAPH).o: $(GRAPH).cpp $(GRAPH).hpp $(ALGORITHM).hpp
-	g++ $< -c -o $@ $(CPPFLAGS)
+bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp
+	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
-$(ALGORITHM).o: $(ALGORITHM).cpp $(ALGORITHM).hpp
-	g++ $< -c -o $@ $(CPPFLAGS)
+bin/$(ALGORITHM).o: src/$(ALGORITHM).cpp include/$(ALGORITHM).hpp
+	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
 .PHONY: clean
 
