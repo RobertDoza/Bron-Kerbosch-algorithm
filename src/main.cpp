@@ -5,7 +5,7 @@
 
 int main() {
 	try {
-		Graph g("graph.txt");
+		Graph g("data/graph.txt");
 		
 		std::cout << g;
 		
