@@ -8,6 +8,7 @@
 class Graph {
 	public:
 		Graph(const std::vector<std::pair<int, int>> &edges);
+		Graph(const std::string &filename);
 		
 		void perform_algorithm() const;
 		

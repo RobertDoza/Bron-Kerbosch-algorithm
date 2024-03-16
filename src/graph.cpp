@@ -1,9 +1,59 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <fstream>
 
 #include "graph.hpp"
 #include "algorithm.hpp"
+
+Graph::Graph(const std::string &filename) {
+	std::ifstream file(filename);
+
+	if (!file.is_open()) {
+		throw std::runtime_error("Error - failed to open file: " + filename);
+	}
+
+	int n;
+	file >> n;
+
+	if (n < 0) {
+		throw std::runtime_error("Error - invalid number of vertices: " + std::to_string(n));
+	}
+
+	std::vector<std::vector<int>> adjacency_matrix(n);
+	for (int i = 0; i < n; i++) {
+		adjacency_matrix[i].resize(n);
+		for (int j = 0; j < n; j++) {
+			int elem;
+			file >> elem;
+			
+			if (elem != 0 && elem != 1) {
+				throw std::runtime_error("Error - adjacency matrix must contain only 1s and 0s!");
+			}
+			
+			adjacency_matrix[i][j] = elem;
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		_vertices.insert(i);
+	}
+	
+	_neighborhoods.resize(n);
+	
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (adjacency_matrix[i][j] != adjacency_matrix[j][i]) {
+				throw std::runtime_error("Error - adjacency matrix is asymmetric!");
+			}
+			
+			if (adjacency_matrix[i][j]) {
+				_neighborhoods[i].insert(j);
+				_neighborhoods[j].insert(i);
+			}
+		}
+	}
+}
 
 std::vector<int> Graph::degeneracy_ordering() const {
 	int n = _vertices.size();
