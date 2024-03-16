@@ -1,8 +1,85 @@
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 
 #include "graph.hpp"
 #include "algorithm.hpp"
+
+std::vector<int> Graph::degeneracy_ordering() const {
+	int n = _vertices.size();
+	std::vector<int> l;
+	std::vector<int> degrees(n);
+	
+	int max_degree = 0;
+	for (const int v : _vertices) {
+		degrees[v] = _neighborhoods[v].size();
+		if (degrees[v] > max_degree) {
+			max_degree = degrees[v];
+		}
+	}
+	
+	std::vector<std::unordered_set<int>> d(max_degree + 1);
+	
+	for (unsigned i = 0; i < degrees.size(); i++) {
+		d[degrees[i]].insert(i);
+	}
+	
+	// TODO: remove output
+	/*
+	for (const auto &set : d) {
+		std::cout << set << std::endl;
+	}
+	*/
+	
+	unsigned k = 0;
+	for (int _ = 0; _ < n; _++) {
+		unsigned i;
+		for (i = 0; i < d.size(); i++) {
+			if (!d[i].empty()) {
+				break;
+			}
+		}
+		
+		if (i > k) {
+			k = i;
+		}
+		
+		int v = *(d[i].begin());
+		l.push_back(v);
+		d[i].erase(v);
+		
+		// TODO: remove output
+		// std::cout << "\nv = " << v << "\n";
+		for (auto w : _neighborhoods[v]) {
+			if (std::find(l.begin(), l.end(), w) != l.end()) {
+				continue;
+			}
+			
+			d[degrees[w]].erase(w);
+			degrees[w]--;
+			d[degrees[w]].insert(w);
+		}
+		
+		// TODO: remove output
+		/*
+		for (const auto &set : d) {
+			std::cout << set << std::endl;
+		}
+		*/
+	}
+	
+	// TODO: remove output
+	/*
+	std::cout << "l: ";
+	for (int v : l) {
+		std::cout << v << " ";
+	}
+	std::cout << "\n";
+	std::cout << "k = " << k << "\n";
+	*/
+	
+	return l;
+}
 
 Graph::Graph(const std::vector<std::pair<int, int>> &edges) {
 	_vertices = calculate_vertices(edges);

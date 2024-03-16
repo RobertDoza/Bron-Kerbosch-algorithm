@@ -18,9 +18,12 @@ int main() {
 	
 	std::cout << g;
 	
-	std::cout << "\nPerforming algorithm...\n\n";
-	
-	g.perform_algorithm();
+	std::vector<int> degeneracy_ordering = g.degeneracy_ordering();
+	std::cout << "degeneracy ordering: ";
+	for (int v : degeneracy_ordering) {
+		std::cout << v << " ";
+	}
+	std::cout << "\n";
 		
 	return 0;
 }

@@ -11,6 +11,8 @@ class Graph {
 		
 		void perform_algorithm() const;
 		
+		std::vector<int> degeneracy_ordering() const;
+		
 		friend std::ostream& operator << (std::ostream &out, const Graph &g);
 	private:
 		std::unordered_set<int> _vertices;
