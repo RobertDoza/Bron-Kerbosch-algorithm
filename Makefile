@@ -20,16 +20,19 @@ HEADERS := $(addprefix include/, $(HEADERS))
 $(EXECUTABLE): $(OBJECTS)
 	g++ $^ -o $@ $(CPPFLAGS)
 
-bin/$(MAIN).o: src/$(MAIN).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp
+bin/$(MAIN).o: src/$(MAIN).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
-bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp
+bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
-bin/$(ALGORITHM).o: src/$(ALGORITHM).cpp include/$(ALGORITHM).hpp
+bin/$(ALGORITHM).o: src/$(ALGORITHM).cpp include/$(ALGORITHM).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
+
+bin:
+	mkdir -p bin
 
 .PHONY: clean
 
 clean:
-	rm -f $(EXECUTABLE) *.o *.~
+	rm -f $(EXECUTABLE) bin/*.o *.~
