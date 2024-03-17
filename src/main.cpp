@@ -5,16 +5,11 @@
 
 int main() {
 	try {
-		Graph g("data/graph.txt");
+		Graph g("data/wiki.txt");
 		
 		std::cout << g;
 		
-		std::vector<int> degeneracy_ordering = g.degeneracy_ordering();
-		std::cout << "degeneracy ordering: ";
-		for (int v : degeneracy_ordering) {
-			std::cout << v << " ";
-		}
-		std::cout << "\n";
+		g.perform_algorithm();
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}

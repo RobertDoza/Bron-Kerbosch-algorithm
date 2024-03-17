@@ -56,7 +56,7 @@ Graph::Graph(const std::string &filename) {
 }
 
 std::vector<int> Graph::degeneracy_ordering() const {
-	int n = _vertices.size();
+	unsigned n = _vertices.size();
 	std::vector<int> l;
 	std::vector<int> degrees(n);
 	
@@ -70,7 +70,7 @@ std::vector<int> Graph::degeneracy_ordering() const {
 	
 	std::vector<std::unordered_set<int>> d(max_degree + 1);
 	
-	for (unsigned i = 0; i < degrees.size(); i++) {
+	for (unsigned i = 0; i < n; i++) {
 		d[degrees[i]].insert(i);
 	}
 	
@@ -82,7 +82,7 @@ std::vector<int> Graph::degeneracy_ordering() const {
 	*/
 	
 	unsigned k = 0;
-	for (int _ = 0; _ < n; _++) {
+	for (unsigned _ = 0; _ < n; _++) {
 		unsigned i;
 		for (i = 0; i < d.size(); i++) {
 			if (!d[i].empty()) {
@@ -116,6 +116,7 @@ std::vector<int> Graph::degeneracy_ordering() const {
 			std::cout << set << std::endl;
 		}
 		*/
+		
 	}
 	
 	// TODO: remove output
@@ -218,13 +219,45 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 	std::cout << indentation(depth) << "STOP\n";
 }
 
+void Graph::bron_kerbosch_3() const {
+	std::unordered_set<int> r = {};
+	std::unordered_set<int> p = _vertices;
+	std::unordered_set<int> x = {};
+	
+	std::cout << indentation(0);
+	std::cout << "R = " << r << ", P = " << p << ", X = " << x << "\n";
+	
+	auto degeneracy_ordering = this->degeneracy_ordering();
+	
+	std::cout << "degeneracy_ordering: ";
+	for (int v : degeneracy_ordering) {
+		std::cout << v << " ";
+	}
+	std::cout << "\n";
+	
+	for (auto v : degeneracy_ordering) {
+		std::cout << "v = " << v << "\n";
+	
+		std::unordered_set<int> new_r = {v};
+		std::unordered_set<int> new_p = set_intersection(p, _neighborhoods[v]);
+		std::unordered_set<int> new_x = set_intersection(x, _neighborhoods[v]);
+		bron_kerbosch_2(new_r, new_p, new_x, 1);
+		
+		p.erase(v);
+		x.insert(v);
+	}
+	
+	std::cout << "STOP\n";
+}
+
 void Graph::perform_algorithm() const {
 	std::unordered_set<int> r = {};
 	std::unordered_set<int> p = _vertices;
 	std::unordered_set<int> x = {};
 
 	// bron_kerbosch(r, p, x);
-	bron_kerbosch_2(r, p, x, 0);
+	// bron_kerbosch_2(r, p, x, 0);
+	bron_kerbosch_3();
 }
 
 std::ostream& operator << (std::ostream &out, const Graph &g) {

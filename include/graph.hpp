@@ -24,6 +24,7 @@ class Graph {
 		
 		void bron_kerbosch(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x) const;
 		void bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x, const int &depth) const;
+		void bron_kerbosch_3() const;
 };
 
 std::string indentation(const int &depth);
