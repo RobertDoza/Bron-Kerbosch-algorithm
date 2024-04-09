@@ -5,6 +5,10 @@ SETOPS     = set_ops
 LOGGER     = logger
 SOLVE      = solve
 
+BIN_DIR     = bin
+SRC_DIR     = src
+INCLUDE_DIR = include
+
 CPPFLAGS = -Wall -Wextra -Werror -pedantic
 
 MODULES = \
@@ -15,34 +19,21 @@ MODULES = \
 	 $(SOLVE)
 
 OBJECTS := $(addsuffix .o, $(MODULES))
-OBJECTS := $(addprefix bin/, $(OBJECTS))
-SOURCES := $(addsuffix .cpp, $(MODULES))
-SOURCES := $(addprefix src/, $(SOURCES))
-HEADERS := $(addsuffix .hpp, $(MODULES))
-HEADERS := $(addprefix include/, $(HEADERS))
+OBJECTS := $(addprefix $(BIN_DIR)/, $(OBJECTS))
 
 $(EXECUTABLE): $(OBJECTS)
 	g++ $^ -o $@ $(CPPFLAGS)
+	
+$(BIN_DIR)/$(MAIN).o: $(SRC_DIR)/$(MAIN).cpp | $(BIN_DIR)
+	g++ $< -c -o $@ $(CPPFLAGS) -I$(INCLUDE_DIR)
 
-bin/$(MAIN).o: src/$(MAIN).cpp include/$(GRAPH).hpp include/$(SETOPS).hpp include/$(SOLVE).hpp | bin
-	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp $(INCLUDE_DIR)/%.hpp | $(BIN_DIR)
+	g++ $< -c -o $@ $(CPPFLAGS) -I$(INCLUDE_DIR)
 
-bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(SETOPS).hpp include/$(LOGGER).hpp | bin
-	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
-
-bin/$(SETOPS).o: src/$(SETOPS).cpp include/$(SETOPS).hpp | bin
-	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
-
-bin/$(LOGGER).o: src/$(LOGGER).cpp include/$(LOGGER).hpp | bin
-	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
-
-bin/$(SOLVE).o: src/$(SOLVE).cpp include/$(SOLVE).hpp include/$(LOGGER).hpp include/$(SETOPS).hpp | bin
-	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
-
-bin:
-	mkdir -p bin
+$(BIN_DIR):
+	mkdir -p $@
 
 .PHONY: clean
 
 clean:
-	rm -f $(EXECUTABLE) bin/*.o *.~
+	rm -f $(EXECUTABLE) $(BIN_DIR)/*.o *.~
