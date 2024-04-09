@@ -3,19 +3,19 @@
 
 #include "set_ops.hpp"
 
-std::unordered_set<int> set_union(const std::unordered_set<int> &set1, const std::unordered_set<int> &set2) {
-	std::unordered_set<int> result(set1);
+set set_union(const set &s1, const set &s2) {
+	set result(s1);
 	
-	result.insert(set2.begin(), set2.end());
+	result.insert(s2.begin(), s2.end());
 	
 	return result;
 }
 
-std::unordered_set<int> set_intersection(const std::unordered_set<int> &set1, const std::unordered_set<int> &set2) {
-	std::unordered_set<int> result;
+set set_intersection(const set &s1, const set &s2) {
+	set result;
 	
-	for (const int &element : set1) {
-		if (set2.count(element) > 0) {
+	for (const int &element : s1) {
+		if (s2.count(element) > 0) {
 			result.insert(element);
 		}
 	}
@@ -23,18 +23,18 @@ std::unordered_set<int> set_intersection(const std::unordered_set<int> &set1, co
 	return result;
 }
 
-std::unordered_set<int> set_difference(const std::unordered_set<int> &set1, const std::unordered_set<int> &set2) {
-	std::unordered_set<int> result(set1);
+set set_difference(const set &s1, const set &s2) {
+	set result(s1);
 	
-	for (const int &element : set2) {
+	for (const int &element : s2) {
 			result.erase(element);
 	}
 	
 	return result;
 }
 
-std::string set_to_string(const std::unordered_set<int> &set) {
-	if (set.empty()) {
+std::string set_to_string(const set &s) {
+	if (s.empty()) {
 		return "{}";
 	}
 	
@@ -43,9 +43,9 @@ std::string set_to_string(const std::unordered_set<int> &set) {
 	buffer << "{";
 	
 	unsigned i = 1;
-	for (const int &element : set) {
+	for (const int &element : s) {
 		buffer << element;
-		if (i != set.size()) {
+		if (i != s.size()) {
 			buffer << ", ";
 		}
 		i++;
@@ -56,8 +56,8 @@ std::string set_to_string(const std::unordered_set<int> &set) {
 	return buffer.str();
 }
 
-std::ostream& operator << (std::ostream &out, const std::unordered_set<int> &set) {
-	out << set_to_string(set);
+std::ostream& operator << (std::ostream &out, const set &s) {
+	out << set_to_string(s);
 	
 	return out;
 }
