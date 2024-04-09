@@ -133,6 +133,14 @@ std::vector<int> Graph::degeneracy_ordering() const {
 	return l;
 }
 
+std::unordered_set<int> Graph::get_vertices() const {
+	return _vertices;
+}
+
+std::unordered_set<int> Graph::get_neighborhood(int u) const {
+	return _neighborhoods[u];
+}
+
 Graph::Graph(const std::vector<std::pair<int, int>> &edges) {
 	_vertices = calculate_vertices(edges);
 

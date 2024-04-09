@@ -12,6 +12,9 @@ class Graph {
 		
 		std::vector<int> degeneracy_ordering() const;
 		
+		std::unordered_set<int> get_vertices() const;
+		std::unordered_set<int> get_neighborhood(int) const;
+		
 		friend std::ostream& operator << (std::ostream &out, const Graph &g);
 	private:
 		std::unordered_set<int> _vertices;

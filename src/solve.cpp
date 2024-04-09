@@ -2,9 +2,7 @@
 #include "logger.hpp"
 #include "set_ops.hpp"
 
-/*
-// TODO
-void bron_kerbosch_basic(const Graph&, const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x) {
+void bron_kerbosch_basic(const Graph &g, const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x) {
 	if (p.empty() && x.empty()) {
 		// TODO
 		Logger::log(set_to_string(r));
@@ -18,16 +16,17 @@ void bron_kerbosch_basic(const Graph&, const std::unordered_set<int> &r, std::un
 		
 		std::unordered_set<int> new_r = r;
 		new_r.insert(v);
-		std::unordered_set<int> new_p = set_intersection(p, _neighborhoods[v]);
-		std::unordered_set<int> new_x = set_intersection(x, _neighborhoods[v]);
+		std::unordered_set<int> new_p = set_intersection(p, g.get_neighborhood(v));
+		std::unordered_set<int> new_x = set_intersection(x, g.get_neighborhood(v));
 		
-		bron_kerbosch(new_r, new_p, new_x);
+		bron_kerbosch_basic(g, new_r, new_p, new_x);
 		
 		it = p.erase(it);
 		x.insert(v);
 	}
 }
 
+/*
 void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x, const int &depth) const {
 	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x), depth);
 
@@ -108,14 +107,11 @@ void Graph::bron_kerbosch_3() const {
 */
 
 void perform_algorithm(const Graph &g, const AlgType &algorithm) {
-	(void) g;
 	if (algorithm == AlgType::BASIC) {
-		/*
 		std::unordered_set<int> r = {};
-		std::unordered_set<int> p = _vertices;
+		std::unordered_set<int> p = g.get_vertices();
 		std::unordered_set<int> x = {};
-		bron_kerbosch(r, p, x);
-		*/
+		bron_kerbosch_basic(g, r, p, x);
 	} else if (algorithm == AlgType::PIVOTING) {
 		/*
 		std::unordered_set<int> r = {};
