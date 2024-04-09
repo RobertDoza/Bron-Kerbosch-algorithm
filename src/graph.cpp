@@ -149,7 +149,9 @@ Graph::Graph(const std::vector<std::pair<int, int>> &edges) {
 
 void Graph::bron_kerbosch(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x) const {
 	if (p.empty() && x.empty()) {
-		std::cout << r << "\n";
+		// TODO
+		Logger::log(set_to_string(r));
+		// std::cout << r << "\n";
 		return;
 	}
 	
@@ -170,14 +172,11 @@ void Graph::bron_kerbosch(const std::unordered_set<int> &r, std::unordered_set<i
 }
 
 void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x, const int &depth) const {
-	// FIXME
-	std::cout << Logger::indentation(depth);
-	std::cout << "R = " << r << ", P = " << p << ", X = " << x << "\n";
+	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x), depth);
 
 	if (p.empty() && x.empty()) {
-		// FIXME
-		std::cout << Logger::indentation(depth) << "found clique: " << r << "\n";
-		std::cout << Logger::indentation(depth) << "STOP\n";
+		Logger::log("found clique: " + set_to_string(r), depth);
+		Logger::log("STOP", depth);
 		return;
 	}
 	
@@ -192,23 +191,17 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 		}
 	}
 	
-	// FIXME
-	std::cout << Logger::indentation(depth);
-	std::cout << "selected pivot u = " << u << "\n";
+	Logger::log("selected pivot u = " + std::to_string(u), depth);
 	
 	std::unordered_set<int> search_area = set_difference(p, _neighborhoods[u]);
 	
-	// FIXME
-	std::cout << Logger::indentation(depth);
-	std::cout << "search area: " << search_area << "\n";
+	Logger::log("search area: " + set_to_string(search_area), depth);
 	
 	auto it = search_area.begin();
 	while (it != search_area.end()) {
 		int v = *it;
 		
-		// FIXME
-		std::cout << Logger::indentation(depth);
-		std::cout << "v = " << v << ":\n";
+		Logger::log("v = " + std::to_string(v) + ":", depth);
 		
 		std::unordered_set<int> new_r = r;
 		new_r.insert(v);
@@ -222,8 +215,7 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 		x.insert(v);
 	}
 	
-	// FIXME
-	std::cout << Logger::indentation(depth) << "STOP\n";
+	Logger::log("STOP", depth);
 }
 
 void Graph::bron_kerbosch_3() const {
@@ -231,20 +223,19 @@ void Graph::bron_kerbosch_3() const {
 	std::unordered_set<int> p = _vertices;
 	std::unordered_set<int> x = {};
 	
-	// FIXME
-	std::cout << Logger::indentation(0);
-	std::cout << "R = " << r << ", P = " << p << ", X = " << x << "\n";
+	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x));
 	
 	auto degeneracy_ordering = this->degeneracy_ordering();
 	
-	std::cout << "degeneracy_ordering: ";
+	std::stringstream buffer;
+	buffer << "degeneracy ordering: ";
 	for (int v : degeneracy_ordering) {
-		std::cout << v << " ";
+		buffer << v << " ";
 	}
-	std::cout << "\n";
+	Logger::log(buffer.str());
 	
 	for (auto v : degeneracy_ordering) {
-		std::cout << "v = " << v << "\n";
+		Logger::log("v = " + std::to_string(v));
 	
 		std::unordered_set<int> new_r = {v};
 		std::unordered_set<int> new_p = set_intersection(p, _neighborhoods[v]);
@@ -255,7 +246,7 @@ void Graph::bron_kerbosch_3() const {
 		x.insert(v);
 	}
 	
-	std::cout << "STOP\n";
+	Logger::log("STOP");
 }
 
 void Graph::perform_algorithm() const {
@@ -263,6 +254,7 @@ void Graph::perform_algorithm() const {
 	std::unordered_set<int> p = _vertices;
 	std::unordered_set<int> x = {};
 
+	// TODO: set correct version
 	// bron_kerbosch(r, p, x);
 	// bron_kerbosch_2(r, p, x, 0);
 	bron_kerbosch_3();

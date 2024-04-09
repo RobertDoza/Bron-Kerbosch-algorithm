@@ -7,7 +7,7 @@ int main() {
 	try {
 		Graph g("data/wiki.txt");
 		
-		std::cout << g;
+		// std::cout << g;
 		
 		g.perform_algorithm();
 	} catch (std::exception &e) {
