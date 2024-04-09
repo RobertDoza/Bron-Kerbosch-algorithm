@@ -3,6 +3,7 @@ MAIN       = main
 GRAPH      = graph
 SETOPS     = set_ops
 LOGGER     = logger
+SOLVE      = solve
 
 CPPFLAGS = -Wall -Wextra -Werror -pedantic
 
@@ -10,7 +11,8 @@ MODULES = \
 	 $(MAIN) \
 	 $(GRAPH) \
 	 $(SETOPS) \
-	 $(LOGGER)
+	 $(LOGGER) \
+	 $(SOLVE)
 
 OBJECTS := $(addsuffix .o, $(MODULES))
 OBJECTS := $(addprefix bin/, $(OBJECTS))
@@ -32,6 +34,9 @@ bin/$(SETOPS).o: src/$(SETOPS).cpp include/$(SETOPS).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
 bin/$(LOGGER).o: src/$(LOGGER).cpp include/$(LOGGER).hpp | bin
+	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
+
+bin/$(SOLVE).o: src/$(SOLVE).cpp include/$(SOLVE).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
 bin:
