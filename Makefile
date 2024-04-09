@@ -1,7 +1,7 @@
 EXECUTABLE = test
 MAIN       = main
 GRAPH      = graph
-ALGORITHM  = algorithm
+SETOPS     = set_ops
 LOGGER     = logger
 
 CPPFLAGS = -Wall -Wextra -Werror -pedantic
@@ -9,7 +9,7 @@ CPPFLAGS = -Wall -Wextra -Werror -pedantic
 MODULES = \
 	 $(MAIN) \
 	 $(GRAPH) \
-	 $(ALGORITHM) \
+	 $(SETOPS) \
 	 $(LOGGER)
 
 OBJECTS := $(addsuffix .o, $(MODULES))
@@ -22,13 +22,13 @@ HEADERS := $(addprefix include/, $(HEADERS))
 $(EXECUTABLE): $(OBJECTS)
 	g++ $^ -o $@ $(CPPFLAGS)
 
-bin/$(MAIN).o: src/$(MAIN).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp | bin
+bin/$(MAIN).o: src/$(MAIN).cpp include/$(GRAPH).hpp include/$(SETOPS).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
-bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp | bin
+bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(SETOPS).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
-bin/$(ALGORITHM).o: src/$(ALGORITHM).cpp include/$(ALGORITHM).hpp | bin
+bin/$(SETOPS).o: src/$(SETOPS).cpp include/$(SETOPS).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
 bin/$(LOGGER).o: src/$(LOGGER).cpp include/$(LOGGER).hpp | bin

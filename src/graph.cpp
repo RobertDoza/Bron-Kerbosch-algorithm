@@ -4,7 +4,7 @@
 #include <fstream>
 
 #include "graph.hpp"
-#include "algorithm.hpp"
+#include "set_ops.hpp"
 
 Graph::Graph(const std::string &filename) {
 	std::ifstream file(filename);

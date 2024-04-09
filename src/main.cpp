@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "graph.hpp"
-#include "algorithm.hpp"
+#include "set_ops.hpp"
 
 int main() {
 	try {
