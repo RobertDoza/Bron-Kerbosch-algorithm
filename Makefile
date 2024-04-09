@@ -2,13 +2,15 @@ EXECUTABLE = test
 MAIN       = main
 GRAPH      = graph
 ALGORITHM  = algorithm
+LOGGER     = logger
 
 CPPFLAGS = -Wall -Wextra -Werror -pedantic
 
 MODULES = \
 	 $(MAIN) \
 	 $(GRAPH) \
-	 $(ALGORITHM)
+	 $(ALGORITHM) \
+	 $(LOGGER)
 
 OBJECTS := $(addsuffix .o, $(MODULES))
 OBJECTS := $(addprefix bin/, $(OBJECTS))
@@ -27,6 +29,9 @@ bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(ALGORITHM).hpp |
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
 bin/$(ALGORITHM).o: src/$(ALGORITHM).cpp include/$(ALGORITHM).hpp | bin
+	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
+
+bin/$(LOGGER).o: src/$(LOGGER).cpp include/$(LOGGER).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
 bin:
