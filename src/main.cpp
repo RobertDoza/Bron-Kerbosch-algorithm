@@ -2,6 +2,7 @@
 
 #include "graph.hpp"
 #include "set_ops.hpp"
+#include "solve.hpp"
 
 int main() {
 	try {
@@ -9,7 +10,7 @@ int main() {
 		
 		// std::cout << g;
 		
-		g.perform_algorithm();
+		perform_algorithm(g, AlgType::BASIC);
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}

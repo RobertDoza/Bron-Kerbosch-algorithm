@@ -10,8 +10,6 @@ class Graph {
 		Graph(const std::vector<std::pair<int, int>> &edges);
 		Graph(const std::string &filename);
 		
-		void perform_algorithm() const;
-		
 		std::vector<int> degeneracy_ordering() const;
 		
 		friend std::ostream& operator << (std::ostream &out, const Graph &g);
@@ -21,10 +19,6 @@ class Graph {
 		
 		static std::unordered_set<int> calculate_vertices(const std::vector<std::pair<int, int>> &edges);
 		static void print_found_clique(const std::unordered_set<int> &clique, const int &tab_depth);
-		
-		void bron_kerbosch(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x) const;
-		void bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x, const int &depth) const;
-		void bron_kerbosch_3() const;
 };
 
 #endif
