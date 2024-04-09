@@ -1,3 +1,8 @@
+#include <iostream>
+
 #include "logger.hpp"
 
-// TODO
+void Logger::log(const std::string &message) {
+	std::cout << message << "\n";
+}
+
