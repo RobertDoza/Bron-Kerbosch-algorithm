@@ -25,7 +25,7 @@ $(EXECUTABLE): $(OBJECTS)
 bin/$(MAIN).o: src/$(MAIN).cpp include/$(GRAPH).hpp include/$(SETOPS).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
-bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(SETOPS).hpp | bin
+bin/$(GRAPH).o: src/$(GRAPH).cpp include/$(GRAPH).hpp include/$(SETOPS).hpp include/$(LOGGER).hpp | bin
 	g++ $< -c -o $@ $(CPPFLAGS) -Iinclude
 
 bin/$(SETOPS).o: src/$(SETOPS).cpp include/$(SETOPS).hpp | bin

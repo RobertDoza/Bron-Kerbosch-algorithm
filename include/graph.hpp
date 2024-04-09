@@ -27,7 +27,4 @@ class Graph {
 		void bron_kerbosch_3() const;
 };
 
-std::string indentation(const int &depth);
-void print_to_console(const std::string &message, const int &tab_depth);
-
 #endif

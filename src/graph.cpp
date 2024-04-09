@@ -5,6 +5,7 @@
 
 #include "graph.hpp"
 #include "set_ops.hpp"
+#include "logger.hpp"
 
 Graph::Graph(const std::string &filename) {
 	std::ifstream file(filename);
@@ -169,12 +170,14 @@ void Graph::bron_kerbosch(const std::unordered_set<int> &r, std::unordered_set<i
 }
 
 void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x, const int &depth) const {
-	std::cout << indentation(depth);
+	// FIXME
+	std::cout << Logger::indentation(depth);
 	std::cout << "R = " << r << ", P = " << p << ", X = " << x << "\n";
 
 	if (p.empty() && x.empty()) {
-		std::cout << indentation(depth) << "found clique: " << r << "\n";
-		std::cout << indentation(depth) << "STOP\n";
+		// FIXME
+		std::cout << Logger::indentation(depth) << "found clique: " << r << "\n";
+		std::cout << Logger::indentation(depth) << "STOP\n";
 		return;
 	}
 	
@@ -189,19 +192,22 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 		}
 	}
 	
-	std::cout << indentation(depth);
+	// FIXME
+	std::cout << Logger::indentation(depth);
 	std::cout << "selected pivot u = " << u << "\n";
 	
 	std::unordered_set<int> search_area = set_difference(p, _neighborhoods[u]);
 	
-	std::cout << indentation(depth);
+	// FIXME
+	std::cout << Logger::indentation(depth);
 	std::cout << "search area: " << search_area << "\n";
 	
 	auto it = search_area.begin();
 	while (it != search_area.end()) {
 		int v = *it;
 		
-		std::cout << indentation(depth);
+		// FIXME
+		std::cout << Logger::indentation(depth);
 		std::cout << "v = " << v << ":\n";
 		
 		std::unordered_set<int> new_r = r;
@@ -216,7 +222,8 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 		x.insert(v);
 	}
 	
-	std::cout << indentation(depth) << "STOP\n";
+	// FIXME
+	std::cout << Logger::indentation(depth) << "STOP\n";
 }
 
 void Graph::bron_kerbosch_3() const {
@@ -224,7 +231,8 @@ void Graph::bron_kerbosch_3() const {
 	std::unordered_set<int> p = _vertices;
 	std::unordered_set<int> x = {};
 	
-	std::cout << indentation(0);
+	// FIXME
+	std::cout << Logger::indentation(0);
 	std::cout << "R = " << r << ", P = " << p << ", X = " << x << "\n";
 	
 	auto degeneracy_ordering = this->degeneracy_ordering();
@@ -298,19 +306,6 @@ std::unordered_set<int> Graph::calculate_vertices(const std::vector<std::pair<in
 }
 
 void Graph::print_found_clique(const std::unordered_set<int> &clique, const int &tab_depth) {
-	std::cout << indentation(tab_depth) << clique << "\n";
-}
-
-std::string indentation(const int &depth) {
-	std::stringstream buffer;
-
-	for (int i = 0; i < depth; i++) {
-		buffer << "|\t";
-	}
-	
-	return buffer.str();
-}
-
-void print_to_console(const std::string &message, const int &tab_depth) {
-	std::cout << indentation(tab_depth) << message << "\n";
+	// FIXME
+	std::cout << Logger::indentation(tab_depth) << clique << "\n";
 }

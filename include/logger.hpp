@@ -5,6 +5,9 @@
 class Logger {
 	public:
 		static void log(const std::string&);
+		static void log(const std::string &message, const int &tab_depth);
+		
+		static std::string indentation(const int &depth);
 	private:
 		Logger();
 		~Logger();
