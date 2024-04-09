@@ -1,8 +1,10 @@
+#include <sstream>
+
 #include "solve.hpp"
 #include "logger.hpp"
 #include "set_ops.hpp"
 
-void bron_kerbosch_basic(const Graph &g, const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x) {
+void bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
 	if (p.empty() && x.empty()) {
 		// TODO
 		Logger::log(set_to_string(r));
@@ -14,10 +16,10 @@ void bron_kerbosch_basic(const Graph &g, const std::unordered_set<int> &r, std::
 	while (it != p.end()) {
 		int v = *it;
 		
-		std::unordered_set<int> new_r = r;
+		set new_r = r;
 		new_r.insert(v);
-		std::unordered_set<int> new_p = set_intersection(p, g.get_neighborhood(v));
-		std::unordered_set<int> new_x = set_intersection(x, g.get_neighborhood(v));
+		set new_p = set_intersection(p, g.get_neighborhood(v));
+		set new_x = set_intersection(x, g.get_neighborhood(v));
 		
 		bron_kerbosch_basic(g, new_r, new_p, new_x);
 		
@@ -26,8 +28,7 @@ void bron_kerbosch_basic(const Graph &g, const std::unordered_set<int> &r, std::
 	}
 }
 
-/*
-void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set<int> &p, std::unordered_set<int> &x, const int &depth) const {
+void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int &depth) {
 	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x), depth);
 
 	if (p.empty() && x.empty()) {
@@ -38,9 +39,9 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 	
 	int u = 0;
 	int max_size = 0;
-	std::unordered_set<int> p_union_x = set_union(p, x);
+	set p_union_x = set_union(p, x);
 	for (const int &w : p_union_x) {
-		int size = _neighborhoods[w].size();
+		int size = g.get_neighborhood(w).size();
 		if (size > max_size) {
 			max_size = size;
 			u = w;
@@ -49,7 +50,7 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 	
 	Logger::log("selected pivot u = " + std::to_string(u), depth);
 	
-	std::unordered_set<int> search_area = set_difference(p, _neighborhoods[u]);
+	set search_area = set_difference(p, g.get_neighborhood(u));
 	
 	Logger::log("search area: " + set_to_string(search_area), depth);
 	
@@ -59,12 +60,12 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 		
 		Logger::log("v = " + std::to_string(v) + ":", depth);
 		
-		std::unordered_set<int> new_r = r;
+		set new_r = r;
 		new_r.insert(v);
-		std::unordered_set<int> new_p = set_intersection(p, _neighborhoods[v]);
-		std::unordered_set<int> new_x = set_intersection(x, _neighborhoods[v]);
+		set new_p = set_intersection(p, g.get_neighborhood(v));
+		set new_x = set_intersection(x, g.get_neighborhood(v));
 		
-		bron_kerbosch_2(new_r, new_p, new_x, depth + 1);
+		bron_kerbosch_pivot(g, new_r, new_p, new_x, depth + 1);
 		
 		p.erase(v);
 		it = search_area.erase(it);
@@ -74,14 +75,14 @@ void Graph::bron_kerbosch_2(const std::unordered_set<int> &r, std::unordered_set
 	Logger::log("STOP", depth);
 }
 
-void Graph::bron_kerbosch_3() const {
-	std::unordered_set<int> r = {};
-	std::unordered_set<int> p = _vertices;
-	std::unordered_set<int> x = {};
+void bron_kerbosch_degen(const Graph &g) {
+	set r = {};
+	set p = g.get_vertices();
+	set x = {};
 	
 	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x));
 	
-	auto degeneracy_ordering = this->degeneracy_ordering();
+	auto degeneracy_ordering = g.degeneracy_ordering();
 	
 	std::stringstream buffer;
 	buffer << "degeneracy ordering: ";
@@ -93,10 +94,10 @@ void Graph::bron_kerbosch_3() const {
 	for (auto v : degeneracy_ordering) {
 		Logger::log("v = " + std::to_string(v));
 	
-		std::unordered_set<int> new_r = {v};
-		std::unordered_set<int> new_p = set_intersection(p, _neighborhoods[v]);
-		std::unordered_set<int> new_x = set_intersection(x, _neighborhoods[v]);
-		bron_kerbosch_2(new_r, new_p, new_x, 1);
+		set new_r = {v};
+		set new_p = set_intersection(p, g.get_neighborhood(v));
+		set new_x = set_intersection(x, g.get_neighborhood(v));
+		bron_kerbosch_pivot(g, new_r, new_p, new_x, 1);
 		
 		p.erase(v);
 		x.insert(v);
@@ -104,24 +105,20 @@ void Graph::bron_kerbosch_3() const {
 	
 	Logger::log("STOP");
 }
-*/
 
 void perform_algorithm(const Graph &g, const AlgType &algorithm) {
 	if (algorithm == AlgType::BASIC) {
-		std::unordered_set<int> r = {};
-		std::unordered_set<int> p = g.get_vertices();
-		std::unordered_set<int> x = {};
+		set r = {};
+		set p = g.get_vertices();
+		set x = {};
 		bron_kerbosch_basic(g, r, p, x);
 	} else if (algorithm == AlgType::PIVOTING) {
-		/*
-		std::unordered_set<int> r = {};
-		std::unordered_set<int> p = _vertices;
-		std::unordered_set<int> x = {};
-		bron_kerbosch(r, p, x);
-		bron_kerbosch_2(r, p, x, 0);
-		*/
+		set r = {};
+		set p = g.get_vertices();
+		set x = {};
+		bron_kerbosch_pivot(g, r, p, x, 0);
 	} else if (algorithm == AlgType::DEGEN_ORDERING) {
-		// bron_kerbosch_3();
+		bron_kerbosch_degen(g);
 	} else {
 		// TODO: error
 	}
