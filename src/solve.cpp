@@ -4,13 +4,15 @@
 #include "logger.hpp"
 #include "set_ops.hpp"
 
-void bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
+unsigned bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
+	unsigned num_function_calls = 1;
+
 	if (p.empty() && x.empty()) {
 		// TODO
 		#ifdef LOG
 		Logger::log(set_to_string(r));
 		#endif
-		return;
+		return num_function_calls;
 	}
 	
 	auto it = p.begin();
@@ -22,14 +24,18 @@ void bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
 		set new_p = set_intersection(p, g.get_neighborhood(v));
 		set new_x = set_intersection(x, g.get_neighborhood(v));
 		
-		bron_kerbosch_basic(g, new_r, new_p, new_x);
+		num_function_calls += bron_kerbosch_basic(g, new_r, new_p, new_x);
 		
 		it = p.erase(it);
 		x.insert(v);
 	}
+	
+	return num_function_calls;
 }
 
-void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int &depth) {
+unsigned bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int &depth) {
+	unsigned num_function_calls = 1;
+
 	#ifdef LOG
 	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x), depth);
 	#endif
@@ -39,7 +45,7 @@ void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int
 		Logger::log("found clique: " + set_to_string(r), depth);
 		Logger::log("STOP", depth);
 		#endif
-		return;
+		return num_function_calls;
 	}
 	
 	int u = 0;
@@ -76,7 +82,7 @@ void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int
 		set new_p = set_intersection(p, g.get_neighborhood(v));
 		set new_x = set_intersection(x, g.get_neighborhood(v));
 		
-		bron_kerbosch_pivot(g, new_r, new_p, new_x, depth + 1);
+		num_function_calls += bron_kerbosch_pivot(g, new_r, new_p, new_x, depth + 1);
 		
 		p.erase(v);
 		it = search_area.erase(it);
@@ -86,9 +92,13 @@ void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int
 	#ifdef LOG
 	Logger::log("STOP", depth);
 	#endif
+	
+	return num_function_calls;
 }
 
-void bron_kerbosch_degen(const Graph &g) {
+unsigned bron_kerbosch_degen(const Graph &g) {
+	unsigned num_function_calls = 1;
+
 	set r = {};
 	set p = g.get_vertices();
 	set x = {};
@@ -116,7 +126,10 @@ void bron_kerbosch_degen(const Graph &g) {
 		set new_r = {v};
 		set new_p = set_intersection(p, g.get_neighborhood(v));
 		set new_x = set_intersection(x, g.get_neighborhood(v));
-		bron_kerbosch_pivot(g, new_r, new_p, new_x, 1);
+		// TODO
+		unsigned tmp = bron_kerbosch_pivot(g, new_r, new_p, new_x, 1);
+		Logger::log(std::to_string(tmp), 1);
+		num_function_calls += tmp;
 		
 		p.erase(v);
 		x.insert(v);
@@ -125,6 +138,8 @@ void bron_kerbosch_degen(const Graph &g) {
 	#ifdef LOG
 	Logger::log("STOP");
 	#endif
+	
+	return num_function_calls;
 }
 
 void perform_algorithm(const Graph &g, const AlgType &algorithm) {
@@ -132,14 +147,26 @@ void perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		set r = {};
 		set p = g.get_vertices();
 		set x = {};
-		bron_kerbosch_basic(g, r, p, x);
+		unsigned num_function_calls = bron_kerbosch_basic(g, r, p, x);
+		
+		#ifdef LOG
+		Logger::log("recursive calls: " + std::to_string(num_function_calls));
+		#endif
 	} else if (algorithm == AlgType::PIVOTING) {
 		set r = {};
 		set p = g.get_vertices();
 		set x = {};
-		bron_kerbosch_pivot(g, r, p, x, 0);
+		unsigned num_function_calls = bron_kerbosch_pivot(g, r, p, x, 0);
+		
+		#ifdef LOG
+		Logger::log("recursive calls: " + std::to_string(num_function_calls));
+		#endif
 	} else if (algorithm == AlgType::DEGEN_ORDERING) {
-		bron_kerbosch_degen(g);
+		unsigned num_function_calls = bron_kerbosch_degen(g);
+		
+		#ifdef LOG
+		Logger::log("recursive calls: " + std::to_string(num_function_calls));
+		#endif
 	} else {
 		// TODO: error
 	}

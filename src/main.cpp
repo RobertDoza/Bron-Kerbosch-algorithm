@@ -10,7 +10,7 @@ int main() {
 		
 		// std::cout << g;
 		
-		perform_algorithm(g, AlgType::DEGEN_ORDERING);
+		perform_algorithm(g, AlgType::BASIC);
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
