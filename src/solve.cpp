@@ -7,8 +7,9 @@
 void bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
 	if (p.empty() && x.empty()) {
 		// TODO
+		#ifdef LOG
 		Logger::log(set_to_string(r));
-		// std::cout << r << "\n";
+		#endif
 		return;
 	}
 	
@@ -29,11 +30,15 @@ void bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
 }
 
 void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int &depth) {
+	#ifdef LOG
 	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x), depth);
+	#endif
 
 	if (p.empty() && x.empty()) {
+		#ifdef LOG
 		Logger::log("found clique: " + set_to_string(r), depth);
 		Logger::log("STOP", depth);
+		#endif
 		return;
 	}
 	
@@ -48,17 +53,23 @@ void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int
 		}
 	}
 	
+	#ifdef LOG
 	Logger::log("selected pivot u = " + std::to_string(u), depth);
+	#endif
 	
 	set search_area = set_difference(p, g.get_neighborhood(u));
 	
+	#ifdef LOG
 	Logger::log("search area: " + set_to_string(search_area), depth);
+	#endif
 	
 	auto it = search_area.begin();
 	while (it != search_area.end()) {
 		int v = *it;
 		
+		#ifdef LOG
 		Logger::log("v = " + std::to_string(v) + ":", depth);
+		#endif
 		
 		set new_r = r;
 		new_r.insert(v);
@@ -72,7 +83,9 @@ void bron_kerbosch_pivot(const Graph &g, const set &r, set &p, set &x, const int
 		x.insert(v);
 	}
 	
+	#ifdef LOG
 	Logger::log("STOP", depth);
+	#endif
 }
 
 void bron_kerbosch_degen(const Graph &g) {
@@ -80,19 +93,25 @@ void bron_kerbosch_degen(const Graph &g) {
 	set p = g.get_vertices();
 	set x = {};
 	
+	#ifdef LOG
 	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x));
+	#endif
 	
 	auto degeneracy_ordering = g.degeneracy_ordering();
 	
+	#ifdef LOG
 	std::stringstream buffer;
 	buffer << "degeneracy ordering: ";
 	for (int v : degeneracy_ordering) {
 		buffer << v << " ";
 	}
 	Logger::log(buffer.str());
+	#endif
 	
 	for (auto v : degeneracy_ordering) {
+		#ifdef LOG
 		Logger::log("v = " + std::to_string(v));
+		#endif
 	
 		set new_r = {v};
 		set new_p = set_intersection(p, g.get_neighborhood(v));
@@ -103,7 +122,9 @@ void bron_kerbosch_degen(const Graph &g) {
 		x.insert(v);
 	}
 	
+	#ifdef LOG
 	Logger::log("STOP");
+	#endif
 }
 
 void perform_algorithm(const Graph &g, const AlgType &algorithm) {

@@ -4,6 +4,8 @@
 
 #include "graph.hpp"
 
+#define LOG
+
 enum class AlgType {
 	BASIC,
 	PIVOTING,
