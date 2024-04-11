@@ -1,3 +1,5 @@
 #pragma once
 
-// TODO
+#include <string>
+
+void test_graph(const std::string&);

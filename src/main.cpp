@@ -1,18 +1,10 @@
 #include <iostream>
 
-#include "graph.hpp"
-#include "set_ops.hpp"
-#include "solve.hpp"
+#include "test.hpp"
 
 int main() {
 	try {
-		Graph g("assets/blue_graph.txt");
-		
-		// std::cout << g;
-		
-		perform_algorithm(g, AlgType::BASIC);
-		perform_algorithm(g, AlgType::PIVOTING);
-		perform_algorithm(g, AlgType::DEGEN_ORDERING);
+		test_graph("assets/blue_graph");
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
