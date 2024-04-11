@@ -1,4 +1,5 @@
-EXECUTABLE = test
+EXECUTABLE = bron_kerbosch
+TEST_EXE   = test
 MAIN       = main
 GRAPH      = graph
 SETOPS     = set_ops
@@ -23,7 +24,9 @@ MODULES = \
 OBJECTS := $(addsuffix .o, $(MODULES))
 OBJECTS := $(addprefix $(BIN_DIR)/, $(OBJECTS))
 
-$(EXECUTABLE): $(OBJECTS)
+all: $(BIN_DIR)/$(EXECUTABLE)
+
+$(BIN_DIR)/$(EXECUTABLE): $(OBJECTS)
 	g++ $^ -o $@ $(CPPFLAGS)
 	
 $(BIN_DIR)/$(MAIN).o: $(SRC_DIR)/$(MAIN).cpp | $(BIN_DIR)
@@ -32,10 +35,13 @@ $(BIN_DIR)/$(MAIN).o: $(SRC_DIR)/$(MAIN).cpp | $(BIN_DIR)
 $(BIN_DIR)/%.o: $(SRC_DIR)/%.cpp $(INCLUDE_DIR)/%.hpp | $(BIN_DIR)
 	g++ $< -c -o $@ $(CPPFLAGS) -I$(INCLUDE_DIR)
 
+$(TEST_EXE): $(OBJECTS)
+	g++ $^ -o $@ $(CPPFLAGS)
+
 $(BIN_DIR):
 	mkdir -p $@
 
 .PHONY: clean
 
 clean:
-	rm -f $(EXECUTABLE) $(BIN_DIR)/*.o *.~
+	rm -f $(BIN_DIR)/$(EXECUTABLE) $(BIN_DIR)/*.o *.~ $(TEST_EXE)
