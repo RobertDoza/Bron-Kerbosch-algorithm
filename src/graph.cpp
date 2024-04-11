@@ -1,11 +1,8 @@
 #include <iostream>
-#include <sstream>
-#include <algorithm>
 #include <fstream>
 
 #include "graph.hpp"
 #include "set_ops.hpp"
-#include "logger.hpp"
 
 Graph::Graph(const std::string &filename) {
 	std::ifstream file(filename);
@@ -68,56 +65,6 @@ Graph::Graph(const std::vector<std::pair<int, int>> &edges) {
 		_neighborhoods[x].insert(y);
 		_neighborhoods[y].insert(x);
 	}
-}
-
-std::vector<int> Graph::degeneracy_ordering() const {
-	unsigned n = _vertices.size();
-	std::vector<int> l;
-	std::vector<int> degrees(n);
-	
-	int max_degree = 0;
-	for (const int v : _vertices) {
-		degrees[v] = _neighborhoods[v].size();
-		if (degrees[v] > max_degree) {
-			max_degree = degrees[v];
-		}
-	}
-	
-	std::vector<std::unordered_set<int>> d(max_degree + 1);
-	
-	for (unsigned i = 0; i < n; i++) {
-		d[degrees[i]].insert(i);
-	}
-	
-	unsigned k = 0;
-	for (unsigned _ = 0; _ < n; _++) {
-		unsigned i;
-		for (i = 0; i < d.size(); i++) {
-			if (!d[i].empty()) {
-				break;
-			}
-		}
-		
-		if (i > k) {
-			k = i;
-		}
-		
-		int v = *(d[i].begin());
-		l.push_back(v);
-		d[i].erase(v);
-		
-		for (auto w : _neighborhoods[v]) {
-			if (std::find(l.begin(), l.end(), w) != l.end()) {
-				continue;
-			}
-			
-			d[degrees[w]].erase(w);
-			degrees[w]--;
-			d[degrees[w]].insert(w);
-		}
-	}
-	
-	return l;
 }
 
 std::unordered_set<int> Graph::get_vertices() const {

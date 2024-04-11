@@ -23,3 +23,6 @@ unsigned bron_kerbosch_pivot(const Graph&, const set&, set&, set&, const int&);
 
 // Function performs the degeneracy ordering version of the Bron-Kerbosch algorithm on the specified graph, using the provided sets.
 unsigned bron_kerbosch_degen(const Graph&);
+
+// Function calculates the degeneracy ordering of the graph.
+std::vector<int> degeneracy_ordering(const Graph&);

@@ -12,9 +12,6 @@ class Graph {
 		// Constructor creates a graph using an array of edges.
 		Graph(const std::vector<std::pair<int, int>>&);
 		
-		// Function calculates the degeneracy ordering of the graph.
-		std::vector<int> degeneracy_ordering() const;
-		
 		// Getter returns the vertices of the graph.
 		std::unordered_set<int> get_vertices() const;
 		

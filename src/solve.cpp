@@ -1,4 +1,5 @@
 #include <sstream>
+#include <algorithm>
 
 #include "solve.hpp"
 #include "logger.hpp"
@@ -119,18 +120,18 @@ unsigned bron_kerbosch_degen(const Graph &g) {
 	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x));
 	#endif
 	
-	auto degeneracy_ordering = g.degeneracy_ordering();
+	auto degen_ordering = degeneracy_ordering(g);
 	
 	#ifdef LOG
 	std::stringstream buffer;
 	buffer << "degeneracy ordering: ";
-	for (int v : degeneracy_ordering) {
+	for (int v : degen_ordering) {
 		buffer << v << " ";
 	}
 	Logger::log(buffer.str());
 	#endif
 	
-	for (auto v : degeneracy_ordering) {
+	for (auto v : degen_ordering) {
 		#ifdef LOG
 		Logger::log("v = " + std::to_string(v));
 		#endif
@@ -150,6 +151,56 @@ unsigned bron_kerbosch_degen(const Graph &g) {
 	#endif
 	
 	return num_function_calls;
+}
+
+std::vector<int> degeneracy_ordering(const Graph &g) {
+	unsigned n = g.get_vertices().size();
+	std::vector<int> l;
+	std::vector<int> degrees(n);
+	
+	int max_degree = 0;
+	for (const int v : g.get_vertices()) {
+		degrees[v] = g.get_neighborhood(v).size();
+		if (degrees[v] > max_degree) {
+			max_degree = degrees[v];
+		}
+	}
+	
+	std::vector<std::unordered_set<int>> d(max_degree + 1);
+	
+	for (unsigned i = 0; i < n; i++) {
+		d[degrees[i]].insert(i);
+	}
+	
+	unsigned k = 0;
+	for (unsigned _ = 0; _ < n; _++) {
+		unsigned i;
+		for (i = 0; i < d.size(); i++) {
+			if (!d[i].empty()) {
+				break;
+			}
+		}
+		
+		if (i > k) {
+			k = i;
+		}
+		
+		int v = *(d[i].begin());
+		l.push_back(v);
+		d[i].erase(v);
+		
+		for (auto w : g.get_neighborhood(v)) {
+			if (std::find(l.begin(), l.end(), w) != l.end()) {
+				continue;
+			}
+			
+			d[degrees[w]].erase(w);
+			degrees[w]--;
+			d[degrees[w]].insert(w);
+		}
+	}
+	
+	return l;
 }
 
 unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
