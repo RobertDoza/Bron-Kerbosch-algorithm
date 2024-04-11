@@ -1,5 +1,4 @@
-#ifndef ALGORITHM_HPP
-#define ALGORITHM_HPP
+#pragma once
 
 #include <unordered_set>
 
@@ -19,5 +18,3 @@ std::string set_to_string(const set&);
 
 // Operator << overload writes the string representation of the set to the output stream.
 std::ostream& operator << (std::ostream &out, const set&);
-
-#endif

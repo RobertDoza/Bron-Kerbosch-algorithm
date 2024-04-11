@@ -1,5 +1,4 @@
-#ifndef GRAPH_HPP
-#define GRAPH_HPP
+#pragma once
 
 #include <vector>
 #include <unordered_set>
@@ -32,5 +31,3 @@ class Graph {
 		// Function calculates the vertices that appear in the graph using the provided array of edges.
 		static std::unordered_set<int> calculate_vertices(const std::vector<std::pair<int, int>>&);
 };
-
-#endif
