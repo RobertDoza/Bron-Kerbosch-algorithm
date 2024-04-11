@@ -16,7 +16,12 @@ void test_graph(const std::string &graph_dir_name) {
 		throw std::runtime_error("Failed to open file for writing: " + output_filename);
 	}
 	
-	perform_algorithm(g, AlgType::BASIC);
-	perform_algorithm(g, AlgType::PIVOTING);
-	perform_algorithm(g, AlgType::DEGEN_ORDERING);
+	unsigned num_calls_basic = perform_algorithm(g, AlgType::BASIC);
+	unsigned num_calls_pivot = perform_algorithm(g, AlgType::PIVOTING);
+	unsigned num_calls_degen = perform_algorithm(g, AlgType::DEGEN_ORDERING);
+	
+	output_file << "Number of function calls:\n";
+	output_file << "basic: " << std::to_string(num_calls_basic) << "\n";
+	output_file << "pivot: " << std::to_string(num_calls_pivot) << "\n";
+	output_file << "degen: " << std::to_string(num_calls_degen) << "\n";
 }

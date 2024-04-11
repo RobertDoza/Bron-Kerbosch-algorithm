@@ -142,7 +142,7 @@ unsigned bron_kerbosch_degen(const Graph &g) {
 	return num_function_calls;
 }
 
-void perform_algorithm(const Graph &g, const AlgType &algorithm) {
+unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
 	if (algorithm == AlgType::BASIC) {
 		set r = {};
 		set p = g.get_vertices();
@@ -152,6 +152,8 @@ void perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		#ifdef LOG
 		Logger::log("recursive calls: " + std::to_string(num_function_calls));
 		#endif
+		
+		return num_function_calls;
 	} else if (algorithm == AlgType::PIVOTING) {
 		set r = {};
 		set p = g.get_vertices();
@@ -161,13 +163,17 @@ void perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		#ifdef LOG
 		Logger::log("recursive calls: " + std::to_string(num_function_calls));
 		#endif
+		
+		return num_function_calls;
 	} else if (algorithm == AlgType::DEGEN_ORDERING) {
 		unsigned num_function_calls = bron_kerbosch_degen(g);
 		
 		#ifdef LOG
 		Logger::log("recursive calls: " + std::to_string(num_function_calls));
 		#endif
+		
+		return num_function_calls;
 	} else {
-		// TODO: error
+		throw std::runtime_error("Error - unknown algorithm type!");
 	}
 }
