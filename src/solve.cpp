@@ -4,13 +4,17 @@
 #include "logger.hpp"
 #include "set_ops.hpp"
 
-unsigned bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
+unsigned bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x, const int &depth) {
 	unsigned num_function_calls = 1;
+	
+	#ifdef LOG
+	Logger::log("R = " + set_to_string(r) + ", P = " + set_to_string(p) + ", X = " + set_to_string(x), depth);
+	#endif
 
 	if (p.empty() && x.empty()) {
-		// TODO
 		#ifdef LOG
-		Logger::log(set_to_string(r));
+		Logger::log("found clique: " + set_to_string(r), depth);
+		Logger::log("STOP", depth);
 		#endif
 		return num_function_calls;
 	}
@@ -19,16 +23,24 @@ unsigned bron_kerbosch_basic(const Graph &g, const set &r, set &p, set &x) {
 	while (it != p.end()) {
 		int v = *it;
 		
+		#ifdef LOG
+		Logger::log("v = " + std::to_string(v) + ":", depth);
+		#endif
+		
 		set new_r = r;
 		new_r.insert(v);
 		set new_p = set_intersection(p, g.get_neighborhood(v));
 		set new_x = set_intersection(x, g.get_neighborhood(v));
 		
-		num_function_calls += bron_kerbosch_basic(g, new_r, new_p, new_x);
+		num_function_calls += bron_kerbosch_basic(g, new_r, new_p, new_x, depth + 1);
 		
 		it = p.erase(it);
 		x.insert(v);
 	}
+	
+	#ifdef LOG
+	Logger::log("STOP", depth);
+	#endif
 	
 	return num_function_calls;
 }
@@ -126,10 +138,8 @@ unsigned bron_kerbosch_degen(const Graph &g) {
 		set new_r = {v};
 		set new_p = set_intersection(p, g.get_neighborhood(v));
 		set new_x = set_intersection(x, g.get_neighborhood(v));
-		// TODO
-		unsigned tmp = bron_kerbosch_pivot(g, new_r, new_p, new_x, 1);
-		Logger::log(std::to_string(tmp), 1);
-		num_function_calls += tmp;
+		
+		num_function_calls += bron_kerbosch_pivot(g, new_r, new_p, new_x, 1);
 		
 		p.erase(v);
 		x.insert(v);
@@ -143,33 +153,45 @@ unsigned bron_kerbosch_degen(const Graph &g) {
 }
 
 unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
-	if (algorithm == AlgType::BASIC) {
+	if (algorithm == AlgType::BASIC) {	
+		#ifdef LOG
+		Logger::log("Bron-Kerbosch algorithm - BASIC\n");
+		#endif
+				
 		set r = {};
 		set p = g.get_vertices();
 		set x = {};
-		unsigned num_function_calls = bron_kerbosch_basic(g, r, p, x);
+		unsigned num_function_calls = bron_kerbosch_basic(g, r, p, x, 0);
 		
 		#ifdef LOG
-		Logger::log("recursive calls: " + std::to_string(num_function_calls));
+		Logger::log("function calls: " + std::to_string(num_function_calls));
 		#endif
 		
 		return num_function_calls;
 	} else if (algorithm == AlgType::PIVOTING) {
+		#ifdef LOG
+		Logger::log("Bron-Kerbosch algorithm - WITH PIVOTING\n");
+		#endif
+	
 		set r = {};
 		set p = g.get_vertices();
 		set x = {};
 		unsigned num_function_calls = bron_kerbosch_pivot(g, r, p, x, 0);
 		
 		#ifdef LOG
-		Logger::log("recursive calls: " + std::to_string(num_function_calls));
+		Logger::log("function calls: " + std::to_string(num_function_calls));
 		#endif
 		
 		return num_function_calls;
 	} else if (algorithm == AlgType::DEGEN_ORDERING) {
+		#ifdef LOG
+		Logger::log("Bron-Kerbosch algorithm - WITH DEGENERACY ORDERING\n");
+		#endif
+		
 		unsigned num_function_calls = bron_kerbosch_degen(g);
 		
 		#ifdef LOG
-		Logger::log("recursive calls: " + std::to_string(num_function_calls));
+		Logger::log("function calls: " + std::to_string(num_function_calls));
 		#endif
 		
 		return num_function_calls;

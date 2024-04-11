@@ -1,5 +1,7 @@
 #pragma once
 
+#define LOG
+
 #include <string>
 
 class Logger {

@@ -4,6 +4,7 @@
 #include "test.hpp"
 #include "graph.hpp"
 #include "solve.hpp"
+#include "logger.hpp"
 
 void test_graph(const std::string &graph_dir_name) {
 	std::string input_filename = graph_dir_name + "/matrix.txt";
@@ -17,7 +18,17 @@ void test_graph(const std::string &graph_dir_name) {
 	}
 	
 	unsigned num_calls_basic = perform_algorithm(g, AlgType::BASIC);
+	
+	#ifdef LOG
+	Logger::log("");
+	#endif
+	
 	unsigned num_calls_pivot = perform_algorithm(g, AlgType::PIVOTING);
+	
+	#ifdef LOG
+	Logger::log("");
+	#endif
+	
 	unsigned num_calls_degen = perform_algorithm(g, AlgType::DEGEN_ORDERING);
 	
 	output_file << "Number of function calls:\n";
