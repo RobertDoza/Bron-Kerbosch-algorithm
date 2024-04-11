@@ -6,11 +6,13 @@
 
 int main() {
 	try {
-		Graph g("data/wiki.txt");
+		Graph g("assets/blue_graph.txt");
 		
 		// std::cout << g;
 		
 		perform_algorithm(g, AlgType::BASIC);
+		perform_algorithm(g, AlgType::PIVOTING);
+		perform_algorithm(g, AlgType::DEGEN_ORDERING);
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
