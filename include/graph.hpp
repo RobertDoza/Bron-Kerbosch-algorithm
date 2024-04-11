@@ -7,21 +7,20 @@
 
 class Graph {
 	public:
-		Graph(const std::vector<std::pair<int, int>> &edges);
-		Graph(const std::string &filename);
+		Graph(const std::string&);
+		Graph(const std::vector<std::pair<int, int>>&);
 		
 		std::vector<int> degeneracy_ordering() const;
 		
 		std::unordered_set<int> get_vertices() const;
 		std::unordered_set<int> get_neighborhood(int) const;
 		
-		friend std::ostream& operator << (std::ostream &out, const Graph &g);
+		friend std::ostream& operator << (std::ostream&, const Graph&);
 	private:
 		std::unordered_set<int> _vertices;
 		std::vector<std::unordered_set<int>> _neighborhoods;
 		
-		static std::unordered_set<int> calculate_vertices(const std::vector<std::pair<int, int>> &edges);
-		static void print_found_clique(const std::unordered_set<int> &clique, const int &tab_depth);
+		static std::unordered_set<int> calculate_vertices(const std::vector<std::pair<int, int>>&);
 };
 
 #endif

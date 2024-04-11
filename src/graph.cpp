@@ -56,6 +56,20 @@ Graph::Graph(const std::string &filename) {
 	}
 }
 
+Graph::Graph(const std::vector<std::pair<int, int>> &edges) {
+	_vertices = calculate_vertices(edges);
+
+	_neighborhoods.resize(_vertices.size());
+
+	for (const std::pair<int, int> &edge : edges) {
+		int x = edge.first;
+		int y = edge.second;
+		
+		_neighborhoods[x].insert(y);
+		_neighborhoods[y].insert(x);
+	}
+}
+
 std::vector<int> Graph::degeneracy_ordering() const {
 	unsigned n = _vertices.size();
 	std::vector<int> l;
@@ -75,13 +89,6 @@ std::vector<int> Graph::degeneracy_ordering() const {
 		d[degrees[i]].insert(i);
 	}
 	
-	// TODO: remove output
-	/*
-	for (const auto &set : d) {
-		std::cout << set << std::endl;
-	}
-	*/
-	
 	unsigned k = 0;
 	for (unsigned _ = 0; _ < n; _++) {
 		unsigned i;
@@ -99,8 +106,6 @@ std::vector<int> Graph::degeneracy_ordering() const {
 		l.push_back(v);
 		d[i].erase(v);
 		
-		// TODO: remove output
-		// std::cout << "\nv = " << v << "\n";
 		for (auto w : _neighborhoods[v]) {
 			if (std::find(l.begin(), l.end(), w) != l.end()) {
 				continue;
@@ -110,25 +115,7 @@ std::vector<int> Graph::degeneracy_ordering() const {
 			degrees[w]--;
 			d[degrees[w]].insert(w);
 		}
-		
-		// TODO: remove output
-		/*
-		for (const auto &set : d) {
-			std::cout << set << std::endl;
-		}
-		*/
-		
 	}
-	
-	// TODO: remove output
-	/*
-	std::cout << "l: ";
-	for (int v : l) {
-		std::cout << v << " ";
-	}
-	std::cout << "\n";
-	std::cout << "k = " << k << "\n";
-	*/
 	
 	return l;
 }
@@ -139,20 +126,6 @@ std::unordered_set<int> Graph::get_vertices() const {
 
 std::unordered_set<int> Graph::get_neighborhood(int u) const {
 	return _neighborhoods[u];
-}
-
-Graph::Graph(const std::vector<std::pair<int, int>> &edges) {
-	_vertices = calculate_vertices(edges);
-
-	_neighborhoods.resize(_vertices.size());
-
-	for (const std::pair<int, int> &edge : edges) {
-		int x = edge.first;
-		int y = edge.second;
-		
-		_neighborhoods[x].insert(y);
-		_neighborhoods[y].insert(x);
-	}
 }
 
 std::ostream& operator << (std::ostream &out, const Graph &g) {
@@ -190,9 +163,4 @@ std::unordered_set<int> Graph::calculate_vertices(const std::vector<std::pair<in
 	}
 	
 	return vertices;
-}
-
-void Graph::print_found_clique(const std::unordered_set<int> &clique, const int &tab_depth) {
-	// FIXME
-	std::cout << Logger::indentation(tab_depth) << clique << "\n";
 }
