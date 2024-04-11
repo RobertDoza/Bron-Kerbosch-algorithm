@@ -4,6 +4,7 @@ GRAPH      = graph
 SETOPS     = set_ops
 LOGGER     = logger
 SOLVE      = solve
+TEST       = test
 
 BIN_DIR     = bin
 SRC_DIR     = src
@@ -16,7 +17,8 @@ MODULES = \
 	 $(GRAPH) \
 	 $(SETOPS) \
 	 $(LOGGER) \
-	 $(SOLVE)
+	 $(SOLVE) \
+	 $(TEST)
 
 OBJECTS := $(addsuffix .o, $(MODULES))
 OBJECTS := $(addprefix $(BIN_DIR)/, $(OBJECTS))
