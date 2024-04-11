@@ -2,7 +2,6 @@
 
 #include "test.hpp"
 
-/* TODO
 int main(int argc, char* argv[]) {
 	if (argc != 2) {
 		std::cerr << "Usage: " << argv[0] << " <directory_path>\n";
@@ -12,15 +11,16 @@ int main(int argc, char* argv[]) {
 	std::string directory_path = argv[1];
 	
 	try {
-		// test_graph(directory_path);
-		test_graph("assets/blue_graph");
+		test_graph(directory_path);
 	} catch (std::exception &e) {
 		std::cerr << e.what() << std::endl;
 	}
 
 	return 0;
 }
-*/
+
+/*
+TODO: remove me
 
 int main() {
 	try {
@@ -31,3 +31,4 @@ int main() {
 
 	return 0;
 }
+*/
