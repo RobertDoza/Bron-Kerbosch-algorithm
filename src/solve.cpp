@@ -204,7 +204,7 @@ std::vector<int> degeneracy_ordering(const Graph &g) {
 	return l;
 }
 
-unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
+AlgResult perform_algorithm(const Graph &g, const AlgType &algorithm) {
 	using clock = std::chrono::high_resolution_clock;
 	
 	clock::time_point start;
@@ -226,13 +226,14 @@ unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		end = clock::now();
 		
 		std::chrono::duration<double> elapsed = end - start;
+		double time = elapsed.count();
 		
 		#ifdef LOG
 		Logger::log("function calls: " + std::to_string(num_function_calls));
-		Logger::log("time: " + std::to_string(elapsed.count()) + "s");
+		Logger::log("time: " + std::to_string(time) + "s");
 		#endif
 		
-		return num_function_calls;
+		return { num_function_calls, time };
 	} else if (algorithm == AlgType::PIVOTING) {
 		#ifdef LOG
 		Logger::log("Bron-Kerbosch algorithm - WITH PIVOTING\n");
@@ -249,13 +250,14 @@ unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		end = clock::now();
 		
 		std::chrono::duration<double> elapsed = end - start;
+		double time = elapsed.count();
 		
 		#ifdef LOG
 		Logger::log("function calls: " + std::to_string(num_function_calls));
-		Logger::log("time: " + std::to_string(elapsed.count()) + "s");
+		Logger::log("time: " + std::to_string(time) + "s");
 		#endif
 		
-		return num_function_calls;
+		return { num_function_calls, time };
 	} else if (algorithm == AlgType::DEGEN_ORDERING) {
 		#ifdef LOG
 		Logger::log("Bron-Kerbosch algorithm - WITH DEGENERACY ORDERING\n");
@@ -268,13 +270,14 @@ unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		end = clock::now();
 		
 		std::chrono::duration<double> elapsed = end - start;
+		double time = elapsed.count();
 		
 		#ifdef LOG
 		Logger::log("function calls: " + std::to_string(num_function_calls));
-		Logger::log("time: " + std::to_string(elapsed.count()) + "s");
+		Logger::log("time: " + std::to_string(time) + "s");
 		#endif
 		
-		return num_function_calls;
+		return { num_function_calls, time };
 	} else {
 		throw std::runtime_error("Error - unknown algorithm type!");
 	}

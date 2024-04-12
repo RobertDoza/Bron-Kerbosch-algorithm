@@ -10,10 +10,15 @@ enum class AlgType {
 	DEGEN_ORDERING
 };
 
+struct AlgResult {
+	unsigned num_function_calls;
+	double time;
+};
+
 using set = std::unordered_set<int>;
 
 // Function performs the Bron-Kerbosch algorithm on the specified graph, using the specified algorithm variant.
-unsigned perform_algorithm(const Graph&, const AlgType&);
+AlgResult perform_algorithm(const Graph&, const AlgType&);
 
 // Function performs the basic version of the Bron-Kerbosch algorithm on the specified graph, using the provided sets.
 unsigned bron_kerbosch_basic(const Graph&, const set&, set&, set&, const int&);
