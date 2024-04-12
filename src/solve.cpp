@@ -1,5 +1,6 @@
 #include <sstream>
 #include <algorithm>
+#include <chrono>
 
 #include "solve.hpp"
 #include "logger.hpp"
@@ -204,6 +205,11 @@ std::vector<int> degeneracy_ordering(const Graph &g) {
 }
 
 unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
+	using clock = std::chrono::high_resolution_clock;
+	
+	clock::time_point start;
+	clock::time_point end;
+
 	if (algorithm == AlgType::BASIC) {	
 		#ifdef LOG
 		Logger::log("Bron-Kerbosch algorithm - BASIC\n");
@@ -212,10 +218,18 @@ unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		set r = {};
 		set p = g.get_vertices();
 		set x = {};
+		
+		start = clock::now();
+		
 		unsigned num_function_calls = bron_kerbosch_basic(g, r, p, x, 0);
+		
+		end = clock::now();
+		
+		std::chrono::duration<double> elapsed = end - start;
 		
 		#ifdef LOG
 		Logger::log("function calls: " + std::to_string(num_function_calls));
+		Logger::log("time: " + std::to_string(elapsed.count()) + "s");
 		#endif
 		
 		return num_function_calls;
@@ -227,10 +241,18 @@ unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		set r = {};
 		set p = g.get_vertices();
 		set x = {};
+		
+		start = clock::now();
+		
 		unsigned num_function_calls = bron_kerbosch_pivot(g, r, p, x, 0);
+		
+		end = clock::now();
+		
+		std::chrono::duration<double> elapsed = end - start;
 		
 		#ifdef LOG
 		Logger::log("function calls: " + std::to_string(num_function_calls));
+		Logger::log("time: " + std::to_string(elapsed.count()) + "s");
 		#endif
 		
 		return num_function_calls;
@@ -239,10 +261,17 @@ unsigned perform_algorithm(const Graph &g, const AlgType &algorithm) {
 		Logger::log("Bron-Kerbosch algorithm - WITH DEGENERACY ORDERING\n");
 		#endif
 		
+		start = clock::now();
+		
 		unsigned num_function_calls = bron_kerbosch_degen(g);
+		
+		end = clock::now();
+		
+		std::chrono::duration<double> elapsed = end - start;
 		
 		#ifdef LOG
 		Logger::log("function calls: " + std::to_string(num_function_calls));
+		Logger::log("time: " + std::to_string(elapsed.count()) + "s");
 		#endif
 		
 		return num_function_calls;
