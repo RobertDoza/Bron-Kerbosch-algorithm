@@ -35,7 +35,7 @@ The `matrix.txt` file should adhere to the following format:
 ```
 where:
 - n is the number of vertices in the graph.
-- <adj-i-j> represents the edge weight between vertices i and j.
+- `<adj-i-j>` represents the edge weight between vertices i and j.
 Example graph directories are provided in the `assets` directory.
 
 ### Output
